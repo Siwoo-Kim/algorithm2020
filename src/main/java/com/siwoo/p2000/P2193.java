@@ -1,11 +1,15 @@
 package com.siwoo.p2000;
 
+import com.siwoo.util.Algorithm;
+import com.siwoo.util.Used;
+
 import java.util.Scanner;
 
 /**
  * D[n] 이 n 자리로 된 이친수의 갯수라면
  *  D[n] = (D[0][n-1] + D[1][n-1]) + D[1][n-1]
  */
+@Used(algorithm = Algorithm.DP)
 public class P2193 {
     private static int MAX = 90;
     private static long[][] D = new long[2][MAX+1];
