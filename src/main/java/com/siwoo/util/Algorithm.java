@@ -1,5 +1,6 @@
 package com.siwoo.util;
 
 public enum Algorithm {
-    STACK, QUEUE, DP, BRUTE_FORCE
+    STACK, QUEUE, GRAPH,    //data structure
+    DP, BRUTE_FORCE, BACK_TRACKING,
 }
