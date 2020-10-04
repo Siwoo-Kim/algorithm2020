@@ -22,13 +22,13 @@ import java.util.*;
  *      2. 인접 리스트.  adjacency-list, O(degree(v)) =  한 정점 연결된 모든 간선 접근
  */
 public class Graph<E> {
-    private Map<E, List<Edge<E>>> G = new HashMap<>();
+    private Map<E, Set<Edge<E>>> G = new HashMap<>();
 
     public Set<E> vertexes() {
         return G.keySet();
     }
 
-    public List<Edge<E>> edgesOf(E v) {
+    public Set<Edge<E>> edgesOf(E v) {
         return G.get(v);
     }
 
@@ -60,7 +60,7 @@ public class Graph<E> {
     }
 
     private void addEdge(Edge<E> edge) {
-        G.computeIfAbsent(edge.v, k -> new LinkedList<>());
+        G.computeIfAbsent(edge.v, k -> new HashSet<>());
         G.get(edge.v).add(edge);
     }
 
