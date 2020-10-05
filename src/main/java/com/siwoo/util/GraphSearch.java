@@ -19,6 +19,10 @@ import java.util.Set;
  *  - 가중치가 1인 그래프에서의 최단 거리 검
  *  - v 방문 이전에 방문했다 표시. 색
  *  - bfs(v) = O(E).  모든 정점에 대한 bfs(v) = O(V*E)
+ *
+ *  BFS 로 가중치가 1인 그래프에서 최단 거리 검색
+ *      dist[i] 가 v 정점으로 부터 i 정점까지의 거리라면
+ *          bfs(p) -> dist[p.edge.v] = dist[p] + 1
  */
 
 public abstract class GraphSearch<E> {
