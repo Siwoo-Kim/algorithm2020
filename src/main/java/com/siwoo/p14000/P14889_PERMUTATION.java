@@ -48,7 +48,7 @@ public class P14889_PERMUTATION {
             for (int i=0; i<S.length; i++) {
                 boolean isStartTeam = start.contains(i);
                 int sum = 0;
-                for (int j = 0; j < S.length; j++) {
+                for (int j = 0; j < S.length; j++) {    //set 을 돌면 되는데....
                     if (i == j) continue;
                     if (isStartTeam && start.contains(j))
                          sum += S[i][j];
