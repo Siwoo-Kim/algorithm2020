@@ -47,7 +47,8 @@ public class P1062_BITMASK {
             int cnt = 0;
             for (int word: WORDS) {
                 boolean ok = true;
-                for (char c='a'; c<='z'; c++) {
+                for (char c='a'; c<='z'; c++) {     // 루프 안돌고 한번에 검사하는 방법 있는데..
+                                                    // (word & (1<<N)-1-mask).. 왜 안되지?
                     if ((MUST & (1 << c)) != 0) continue;
                     if ((word & (1 << c)) != 0) {
                         if ((learn & (1 <<c)) == 0) {
