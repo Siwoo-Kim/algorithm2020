@@ -1,127 +1,115 @@
 package com.siwoo.p1000;
 
-import com.siwoo.util.Algorithm;
-import com.siwoo.util.Used;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-import java.io.*;
-import java.util.*;
-
-// 실패
-@Used(algorithm = Algorithm.DnC)
 public class P1933 {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private static BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
     private static int N;
     private static Stick[] sticks;
 
     public static void main(String[] args) throws IOException {
         N = Integer.parseInt(reader.readLine());
         sticks = new Stick[N];
-        for (int i=0; i<N; i++) {
-            StringTokenizer token = new StringTokenizer(reader.readLine());
-            int f = Integer.parseInt(token.nextToken()),
-                    h = Integer.parseInt(token.nextToken()),
-                    t = Integer.parseInt(token.nextToken());
-            sticks[i] = new Stick(f, t, h);
-        }
-        Arrays.sort(sticks, Stick.c);
-        Sight[] sights = dnc(0, sticks.length-1);
-        for (Sight s: sights) {
-            writer.write(s.x + " ");
-            writer.write(s.height + " ");
-        }
-        writer.flush();
+        for (int i=0; i<N; i++)
+            sticks[i] = new Stick(reader.readLine());
+        Pair[] pairs = dnc(0, sticks.length, sticks);
+        StringBuilder sb = new StringBuilder();
+        for (Pair p: pairs)
+            sb.append(p.x()).append(" ")
+                .append(p.height()).append(" ");
+        System.out.println(sb.toString());
     }
 
-    private static Sight[] dnc(int left, int right) {
-        if (left == right) {
-            Stick s = sticks[left];
-            return new Sight[] {
-                    new Sight(s.from, s.height),
-                    new Sight(s.to, 0),
+    private static Pair[] dnc(int l, int r, Stick[] sticks) {
+        if (r - l <= 1) {
+            return new Pair[] {
+                    sticks[l].toPair(),
+                    new Stick(sticks[l].to + " 0 0").toPair()
             };
         }
-        int mid = (right + left) / 2;
-        Sight[] leftSights = dnc(left, mid),
-                rightSights = dnc(mid+1, right);
-        List<Sight> mergeSights = new ArrayList<>();
-        int i = 0, j = 0, lh = 0, rh = 0;
-        while (i < leftSights.length
-                && j < rightSights.length) {   //until finish up all one side of sights
-            Sight l = leftSights[i],
-                    r = rightSights[j];
-            if (l.x < r.x) {
-                lh = l.height;
-                int height = Math.max(lh, rh);
-                Sight v = new Sight(l.x, height);
-                if (mergeSights.size() == 0)
-                    mergeSights.add(v);
-                else {
-                    Sight w = mergeSights.get(mergeSights.size()-1);
-                    if (w.height == v.height) {
-                    }
-                    else if (w.x == v.x) {
-                        w.height = v.height;
-                        mergeSights.remove(mergeSights.size()-1);
-                        mergeSights.add(w);
-                    }
-                    else mergeSights.add(v);
-                }
-                i++;
-            } else {
-                rh = r.height;
-                int height = Math.max(lh, rh);
-                Sight v = new Sight(r.x, height);
-                if (mergeSights.size() == 0)
-                    mergeSights.add(v);
-                else {
-                    Sight w = mergeSights.get(mergeSights.size()-1);
-                    if (w.height == v.height) {
-                    }
-                    else if (w.x == v.x) {
-                        w.height = v.height;
-                        mergeSights.remove(mergeSights.size()-1);
-                        mergeSights.add(w);
-                    }
-                    else mergeSights.add(v);
-                }
-                j++;
-            }
-        }
-        while (i < leftSights.length)
-            mergeSights.add(leftSights[i++]);
-        while (j < rightSights.length)
-            mergeSights.add(rightSights[j++]);
-        return mergeSights.toArray(new Sight[0]);
+        int mid = (r + l) / 2;
+        return merge(dnc(l, mid, sticks), dnc(mid, r, sticks));
     }
 
-    private static class Sight {
-        private int x, height;
-
-        public Sight(int x, int height) {
-            this.x = x;
-            this.height = height;
+    private static Pair[] merge(Pair[] left, Pair[] right) {
+        List<Pair> merge = new ArrayList<>();
+        int i = 0, j = 0, lh = 0, rh = 0;
+        while (true) {
+            if (i == left.length
+                    || j == right.length)
+                break;
+            int x;
+            if (left[i].x() < right[j].x()) {
+                lh = left[i].height();
+                x = left[i++].x();
+            } else {
+                rh = right[j].height();
+                x = right[j++].x();
+            }
+            Pair pair = Pair.of(x, Math.max(lh, rh));
+            if (valid(merge, pair))
+                merge.add(pair);
         }
+        while (i < left.length) {
+            if (valid(merge, left[i]))
+                merge.add(left[i]);
+            i++;
+        }
+        while (j < right.length) {
+            if (valid(merge, right[j]))
+                merge.add(right[j]);
+            j++;
+        }
+        return merge.toArray(new Pair[0]);
+    }
 
-        @Override
-        public String toString() {
-            return "Sight{" +
-                    "x=" + x +
-                    ", height=" + height +
-                    '}';
+    private static boolean valid(List<Pair> pairs, Pair v) {
+        if (pairs.isEmpty()) return true;
+        Pair w = pairs.get(pairs.size()-1);
+        if (w.height() == v.height()) return false; //cross sticks
+        if (w.x() == v.x()) {   // because of sort, last one is bigger
+            pairs.set(pairs.size()-1, Pair.of(w.x(), v.height()));  //side effect
+            return false;
+        }
+        return true;
+    }
+
+    private interface Pair {
+        int x();
+        int height();
+
+        static Pair of(int x, int height) {
+            return new Pair() {
+                @Override
+                public int x() {
+                    return x;
+                }
+
+                @Override
+                public int height() {
+                    return height;
+                }
+            };
         }
     }
 
     private static class Stick {
-        private final int from, to, height;
-        private static Comparator<Stick> c = Comparator.comparingInt(Stick::getFrom)
+        private static final Comparator<Stick> c = Comparator
+                .comparing(Stick::getFrom)
                 .thenComparing(Stick::getHeight)
-                .thenComparing(s -> -s.getTo());
+                .thenComparing(Stick::getTo);
+        private final int from, to, height;
 
-        private Stick(int from, int to, int height) {
-            this.from = from;
-            this.to = to;
-            this.height = height;
+        public Stick(String s) {
+            String[] data = s.split("\\s+");
+            this.from = Integer.parseInt(data[0]);
+            this.height = Integer.parseInt(data[1]);
+            this.to = Integer.parseInt(data[2]);
         }
 
         public int getFrom() {
@@ -134,6 +122,10 @@ public class P1933 {
 
         public int getHeight() {
             return height;
+        }
+
+        public Pair toPair() {
+            return Pair.of(from, height);
         }
     }
 }
