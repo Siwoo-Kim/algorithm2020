@@ -47,12 +47,14 @@ public class P1981 {
         return ANSWER;
     }
 
-    private static boolean dfs(int B, int[][] BOARD) {
+    private static boolean dfs(int B, int[][] BOARD) {  //state 을 나누는 dfs 은 시간초과남.
         Point p = new Point(0, 0);
         int v = BOARD[p.x][p.y];
-        for (int i=0; i+B<=200; i++) {
-            if (i > v || i+B < v) continue;
-            if (dfs(p, i, i + B, new HashSet<>(), BOARD))
+        for (int i=0; i+B<=200; i++) {  //Boundary 을 이용해 min, max 을 결정.,
+                                        // i 가 min 일때,  max = min + B
+            int min = i, max = min+B;
+            if (min > v || max < v) continue;
+            if (dfs(p, min, max, new HashSet<>(), BOARD))
                 return true;
         }
         return false;
