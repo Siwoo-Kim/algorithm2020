@@ -1,4 +1,4 @@
-package com.siwoo.p16000;
+package com.siwoo.p11000;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-public class P11651 {
+public class P11650 {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static Point[] points;
     private static int N;
@@ -29,7 +29,7 @@ public class P11651 {
     }
 
     private static <A extends Comparable<A>>
-    void sort(int left, int right, A[] E) {
+        void sort(int left, int right, A[] E) {
         if (right - left <= 1) return;
         int i = left, j = right;
         A a = E[left];
@@ -60,7 +60,7 @@ public class P11651 {
     }
 
     private static class Point implements Comparable<Point> {
-        private static Comparator<Point> C = Comparator.comparing(Point::getY).thenComparing(Point::getX);
+        private static Comparator<Point> C = Comparator.comparing(Point::getX).thenComparing(Point::getY);
         private final int x, y;
 
         private Point(int x, int y) {
