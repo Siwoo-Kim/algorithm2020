@@ -1,5 +1,6 @@
 package com.siwoo.util;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -28,7 +29,28 @@ public class Combination {
         }
     }
 
+    public static long nCr(long N, long R) {
+        // nPr(N, R) / R!
+        return BigInteger.valueOf(nPr(N, R)).divide(factorial(R)).longValue();
+    }
+
+    private static long nPr(long N, long R) {
+        // N! / N-R!
+        return factorial(N).divide(factorial(N-R)).longValue();
+    }
+
+    private static BigInteger factorial(long N) {
+        if (N == 0) return BigInteger.ONE;
+        return factorial(N-1).multiply(BigInteger.valueOf(N));
+    }
+
     public static void main(String[] args) {
-        combination(Arrays.asList(1, 2, 3, 4, 5), 3);
+        //combination(Arrays.asList(1, 2, 3, 4, 5), 3);
+//        System.out.println(factorial(10));
+//        System.out.println(nPr(10, 3));
+//        System.out.println(nPr(20, 3));
+//        System.out.println(nCr(200, 3));
+
+        System.out.printf("%,d%n", nCr(4000, 3));
     }
 }
