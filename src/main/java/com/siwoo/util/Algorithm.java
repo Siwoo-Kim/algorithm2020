@@ -6,5 +6,6 @@ public enum Algorithm {
     DFS, BFS, UNION_FIND,   //Graph
     GREEDY,
     DnC, BINARY_SEARCH, DP,     //Partitioning
-    PERMUTATION, COMBINATION, //Brute Force
+    PERMUTATION, COMBINATION, BINARY_SELECTION; //Brute Force
+    
 }
