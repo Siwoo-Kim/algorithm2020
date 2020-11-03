@@ -7,7 +7,7 @@ import java.util.*;
  * 조합 - 선택의 순서가 중요하지 않은 경우의 모든 경우의 수.
  */
 public class Combination {
-
+    
     public static <E> void combination(List<E> elements, int select) {
         assert elements != null && elements.size() >= select;
         //elements = new ArrayList<>(new HashSet<>(elements)); - real combination
@@ -46,11 +46,12 @@ public class Combination {
 
     public static void main(String[] args) {
         //combination(Arrays.asList(1, 2, 3, 4, 5), 3);
+        
 //        System.out.println(factorial(10));
 //        System.out.println(nPr(10, 3));
 //        System.out.println(nPr(20, 3));
 //        System.out.println(nCr(200, 3));
 
-        System.out.printf("%,d%n", nCr(400, 2));
+        System.out.printf("%,d%n", nCr(81000, 2));   //xss
     }
 }
