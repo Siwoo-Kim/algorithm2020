@@ -10,6 +10,7 @@ import java.util.*;
 
 /**
  * BFS - 정점 분리
+ * O(NM^2)=62,500
  */
 @Used(algorithm = Algorithm.BFS)
 public class P1600 {

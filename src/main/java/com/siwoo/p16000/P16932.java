@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-@Used(algorithm = Algorithm.BFS)
+@Used(algorithm = Algorithm.UNION_FIND)
 public class P16932 {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static int N, M;
