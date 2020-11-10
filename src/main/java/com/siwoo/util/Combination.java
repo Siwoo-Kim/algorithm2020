@@ -52,6 +52,6 @@ public class Combination {
 //        System.out.println(nPr(20, 3));
 //        System.out.println(nCr(200, 3));
 
-        System.out.printf("%,d%n", nCr(81000, 2));   //xss
+        System.out.printf("%,d%n", nCr(10, 5));   //xss
     }
 }
