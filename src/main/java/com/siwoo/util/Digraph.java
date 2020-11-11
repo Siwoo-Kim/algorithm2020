@@ -32,7 +32,20 @@ import static java.util.stream.Collectors.toList;
  *          s 정점에서 도달 가능한 모든 정점 w 검색 알고리즘.
  *          => GC 알고리즘 "표시하고 훑기". 
  *              비트 하나를 표시용으로 남겨두고, 
- *              접근 가능한 객체를 정점으로 DFS 을 주기적으로 실행. 이때 표시되지 않은 객체를 수집. *          
+ *              접근 가능한 객체를 정점으로 DFS 을 주기적으로 실행. 이때 표시되지 않은 객체를 수집. *
+ *              
+ *  위상 정렬. topological sort
+ *      모든 정점이 간선이 가리키는 방향으로만 나열되도록 정렬. (즉 뒤에 있는 정점이 앞에 있는 정점 방향으로 연결되는 경우가 없도록 정렬)
+ *      
+ *      => 작업의 선호 조건을 만족시키기 위한 작업 배치를 위한 알고리즘.
+ *      => 작업 x 가 작업 y 보다 완료되어야 하고, 작업 y는 작업 z 보다 먼저 완료되어야 한다면, 
+ *          작업 z 은 절대 작업 x, y 보다 먼저 완료되는 조건을 가질 수 없다. (설계 위반)
+ *      
+ *      위상 정렬을 위한 사전 조건. - 순환 탐지
+ *          DFS 을 사용.
+ *              dfs(v, w) 시, 스택에 w 가 존재한다면 w->v 경로가 존재한다는 증거이고, 
+ *              이번 스택에서 v->w 이므로 순환이 완성. 
+ *      
  */
 public class Digraph {
     private final int v;
@@ -63,6 +76,59 @@ public class Digraph {
         }
     }
     
+    private static class Cycle {
+        private Digraph DG;
+        private int[] edgeTo;
+        private Stack<Integer> cycle;
+        private boolean[] onStack;
+        private boolean[] visit;
+        private boolean hasCycle;
+
+        public Cycle(Digraph DG) {
+            this.DG = DG;
+            onStack = new boolean[DG.numberOfVertexes()];
+            visit = new boolean[DG.numberOfVertexes()];
+            edgeTo = new int[DG.numberOfVertexes()];
+            for (int v: DG.vertexes())
+                if (!visit[v])
+                    dfs(DG, v);
+        }
+
+        private void dfs(Digraph DG, int v) {
+            onStack[v] = true;
+            visit[v] = true;
+            for (int w: DG.adj(v)) {
+                if (hasCycle) return;
+                if (!visit[w]) {
+                    edgeTo[w] = v;
+                    dfs(DG, w);
+                } else if (onStack[w]){
+                    hasCycle = true;
+                    cycle = new Stack<>();
+                    //cycle point = v
+                    for (int x=v;x!=w;x=edgeTo[x]) {
+                        cycle.push(x);
+                    }
+                    cycle.push(w);
+                    cycle.push(v);
+                }
+            }
+            onStack[v] = false;
+        }
+        
+        public boolean hasCycle() {
+            return hasCycle;
+        }
+
+        public Iterable<Integer> cycle() {
+            return cycle;
+        }
+    }
+
+    private Set<Integer> vertexes() {
+        return G.keySet();
+    }
+
     private static class Edge {
         private final int v, w;
 
@@ -141,5 +207,8 @@ public class Digraph {
         dfs = DG.dfs(0);
         System.out.println(dfs.visit);
 
+        Cycle cycle = new Digraph.Cycle(DG);
+        System.out.println(cycle.hasCycle);
+        System.out.println(cycle.cycle);
     }
 }
