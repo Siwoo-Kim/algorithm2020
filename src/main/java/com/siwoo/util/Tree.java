@@ -46,7 +46,10 @@ import java.util.function.Function;
  *          - left, root, right
  *          - 이진 트리에서만 가능.
  *
- *      1-3. post-order
+ *      1-3. post-order 
+ *          -> Topological 정렬시 사용. (dfs 시 call stack 의 정점들을 post-order 을 이용하여 stack 에 저장하면 위상 정렬 순서이다.)
+ *          stack.top 은 해당 정점을 저장한 스택 아래의 정점을 절대 가르키지 않고, 그 아래의 stack 또한 재귀적으로 이를 만족한다. (단, 순환이 없다는 조건하에)
+ *          
  *          - left, root, right
  *          - 자식의 값을 집계한 후 연산하는 경우.
  *
