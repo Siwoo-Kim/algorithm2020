@@ -41,8 +41,6 @@ import java.util.List;
  *     6        [A]BCABD[A]             1 
  *     7        [AB]CABD[AB]            2
  *     8        [ABC]ABD[ABC]           3
- *     9        [ABCA]BD[ABCA]          4   => fail[4] 은 3 번의 정보를 가지고 있다.
- *                                          => fail[fail[4]-1]
  *     10       [ABCAB]D[ABCAB]         5   => fail[5] 은 4 번의 정보를 가지고 있다.
  *                                          => fail[fail[5]-1] 
  *                                          => 이 정보를 통해 ps 순회 검색이 가능하다.
