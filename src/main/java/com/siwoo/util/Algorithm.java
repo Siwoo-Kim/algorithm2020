@@ -8,5 +8,6 @@ public enum Algorithm {
     DnC, BINARY_SEARCH, DP,     //Partitioning
     PERMUTATION, COMBINATION, BINARY_SELECTION, //Brute Force
     TWO_POINTER, MEET_IN_THE_MIDDLE,
-    HEAP
+    HEAP,
+    KMP, RABIN_KARP     //String search
 }
