@@ -30,6 +30,7 @@ import java.util.Arrays;
  *          7, 2, 4, 1, 3, 5, 6 -> 순서를 뒤집는다.
  *
  * 다음 순열을 이용한 모든 순열 순회 -> O(N) * N!
+ * 
  */
 public class Permutation {
 
@@ -47,6 +48,7 @@ public class Permutation {
             swap(i++, j--, S);
         return true;
     }
+    
 
     private static void swap(int i, int j, int[] S) {
         int t = S[i];
