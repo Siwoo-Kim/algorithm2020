@@ -110,7 +110,7 @@ public class AhoCorasick {
             char c = s.charAt(i);
             while (node != root && node.children[c] == null)
                 node = node.pi;
-            if (node.children[c] != null)
+            if (node.children[c] != null)   //bug
                 node = node.children[c];
             if (node.exist)
                 found.add(node.s);
@@ -119,9 +119,9 @@ public class AhoCorasick {
     }
 
     public static void main(String[] args) {
-        AhoCorasick ahoCorasick = new AhoCorasick(Arrays.asList("ABABC", "ABC", "AD", "BCD"));
+        AhoCorasick ahoCorasick = new AhoCorasick(Arrays.asList("ab", "dabd"));
 
-        System.out.println(ahoCorasick.search("ADBD"));
+        System.out.println(ahoCorasick.search("dabbbb"));
         System.out.println(ahoCorasick.search("ABCDAD"));
         System.out.println(ahoCorasick.search("ABCDEABABABABCD"));
     }
