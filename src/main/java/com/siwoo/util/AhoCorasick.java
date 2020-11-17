@@ -45,6 +45,7 @@ public class AhoCorasick {
         private Node[] children = new Node[ASCII+1];
         private Node pi;
         private boolean exist;
+        private boolean link;
         private String s;   //for debugging
 
         @Override
@@ -83,7 +84,7 @@ public class AhoCorasick {
                     w.pi = pi;  //link pi
                 }
                 Node pi = w.pi;
-                w.exist |= pi.exist;
+                w.link |= pi.link;
                 q.add(w);
             }
         }
@@ -91,7 +92,7 @@ public class AhoCorasick {
 
     private void put(String p, int i, Node root) {
         if (p.length() == i) {
-            root.exist = true;
+            root.exist = root.link = true;
             return;
         }
         char c = p.charAt(i);
@@ -110,10 +111,15 @@ public class AhoCorasick {
             char c = s.charAt(i);
             while (node != root && node.children[c] == null)
                 node = node.pi;
-            if (node.children[c] != null)   //bug
+            if (node.children[c] != null)
                 node = node.children[c];
-            if (node.exist)
-                found.add(node.s);
+            if (node.link) {
+                Node pi = node;
+                //아호코라식은 원래 겹치는 문자열에 대한 여러 패턴을 동시에 찾을 수 없다.
+                while (pi != root && !pi.exist) 
+                    pi = pi.pi;
+                found.add(pi.s);
+            }
         }
         return found;
     }
@@ -122,6 +128,8 @@ public class AhoCorasick {
         AhoCorasick ahoCorasick = new AhoCorasick(Arrays.asList("ab", "dabd"));
 
         System.out.println(ahoCorasick.search("dabbbb"));
+
+        ahoCorasick = new AhoCorasick(Arrays.asList("ABC", "AB", "BC"));
         System.out.println(ahoCorasick.search("ABCDAD"));
         System.out.println(ahoCorasick.search("ABCDEABABABABCD"));
     }
