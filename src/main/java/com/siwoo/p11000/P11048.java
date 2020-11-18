@@ -1,5 +1,8 @@
 package com.siwoo.p11000;
 
+import com.siwoo.util.Algorithm;
+import com.siwoo.util.Used;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,6 +16,7 @@ import java.util.StringTokenizer;
  *  
  *  * 대각선은 이동은 의미가 없다. => (i, j) 의 경로 (i+1, j+1) 는 (i, j+1) => (i+1, j+1), (i+1, j) => (i+1, j+1) 경로보다 항상 작기때문.
  */
+@Used(algorithm = Algorithm.DP)
 public class P11048 {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static int[][] BOARD, DP;
