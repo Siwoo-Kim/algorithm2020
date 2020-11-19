@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
  *  
  *  DP[i+1] = Math.max(DP[i+1], DP[i])
  *  DP[i+T[i]] = Math.max(DP[i+T[i]], DP[i] + P[i])
+ *  
  */
 public class P15486 {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
