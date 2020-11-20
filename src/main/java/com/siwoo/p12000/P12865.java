@@ -34,7 +34,6 @@ public class P12865 {
         System.out.println(Arrays.stream(D[N-1]).max().getAsInt());
     }
 
-
     private static class Pair {
         private final int w, v;
 

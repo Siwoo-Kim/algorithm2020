@@ -26,11 +26,11 @@ public class P1495 {
                 .mapToInt(Integer::parseInt)
                 .toArray();
         visit = new boolean[N][M+1];
-        dp(0, S, new Stack<>());
+        tune(0, S);
         System.out.println(ANSWER);
     }
     
-    private static void dp(int i, int s, Stack<Integer> stack) {
+    private static void tune(int i, int s) {
         if (i == N) {
             ANSWER = Math.max(ANSWER, s);
             return;
@@ -38,12 +38,12 @@ public class P1495 {
         int x = s - VOLUMES[i];
         if (x >= 0 && !visit[i][x]) {
             visit[i][x] = true;
-            dp(i + 1, x, stack);
+            tune(i + 1, x);
         }
         x = s + VOLUMES[i];
         if (x <= M && !visit[i][x]) {
             visit[i][x] = true;
-            dp(i + 1, x, stack);
+            tune(i + 1, x);
         }
     }
 }
