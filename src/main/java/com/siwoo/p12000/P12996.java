@@ -5,6 +5,10 @@ import com.siwoo.util.Used;
 
 import java.util.Scanner;
 
+/**
+ * D[i][a][b][c] = i 번째 곡을 불렀고, 각 a, b, c 각각이 불러야할 남은 곡의 수라 가정하면,
+ *   D[i][a][b][c] += D[i-1][7 가지 경우. 1 << 8 - 1 (공집합 제거))
+ */
 @Used(algorithm = Algorithm.DP)
 public class P12996 {
     private static Scanner scanner = new Scanner(System.in);
