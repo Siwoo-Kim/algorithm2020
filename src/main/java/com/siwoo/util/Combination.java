@@ -5,6 +5,14 @@ import java.util.*;
 
 /**
  * 조합 - 선택의 순서가 중요하지 않은 경우의 모든 경우의 수.
+ * 
+ * 이항 계수 (nCr):  pascal`s triangle (n, r) 
+ *  pascal`s triangle: t[n][r] = t[n-1][r-1] + t[n-1][r]
+ *  
+ *  증명
+ *      d[n][k] = n 개 중에서 k 을 중복없이 고르는 경우의 수.
+ *         n 번을 고르는 경우 = d[n-1][k-1]
+ *         n 번을 고르지 않는 경우 = d[n-1][k]
  */
 public class Combination {
     
