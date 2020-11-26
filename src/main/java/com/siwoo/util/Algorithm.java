@@ -12,5 +12,5 @@ public enum Algorithm {
     KMP, RABIN_KARP,  //문자열 S 에서 패턴 문자열 P 검색 알고리즘 
     TRIE,     //문자 집합 S 에서 특정 문자 S 검색 자료구조
     AHO_CORASICK,
-    CCW         // 기하학 알고리즘    
+    CCW, LINE_SWEEPING        // 기하학 알고리즘    
 }
