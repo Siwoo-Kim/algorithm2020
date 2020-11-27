@@ -51,6 +51,7 @@ public class Digraph {
     private final int v;
     private int e;
     private Map<Integer, List<Edge>> G = new HashMap<>();
+    private Map<Integer, Integer> inDegree = new HashMap<>();
     
     private static class DFS {
         private Digraph DG;
@@ -125,7 +126,7 @@ public class Digraph {
         }
     }
 
-    private Set<Integer> vertexes() {
+    public Set<Integer> vertexes() {
         return G.keySet();
     }
 
@@ -150,10 +151,18 @@ public class Digraph {
         return e;
     }
     
+    public int inDegreeOf(int v) {
+        return !inDegree.containsKey(v)? 0: inDegree.get(v);
+    }
+    
     public void add(int v, int w) {
         G.computeIfAbsent(v, k -> new ArrayList<>());
         G.computeIfAbsent(w, k -> new ArrayList<>());
         G.get(v).add(new Edge(v, w));
+        if (!inDegree.containsKey(w))
+            inDegree.put(w, 1);
+        else
+            inDegree.put(w, inDegree.get(w) + 1);
         e++;
     }
     
