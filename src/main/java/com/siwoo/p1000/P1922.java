@@ -1,10 +1,14 @@
 package com.siwoo.p1000;
 
+import com.siwoo.util.Algorithm;
+import com.siwoo.util.Used;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+@Used(algorithm = Algorithm.PRIM)
 public class P1922 {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private static int N, M;

@@ -3,7 +3,7 @@ package com.siwoo.util;
 public enum Algorithm {
     STACK, QUEUE, GRAPH, LINKED_LIST,   //data structure
     BRUTE_FORCE, BACK_TRACKING,
-    DFS, BFS, UNION_FIND, TOPOLOGICAL_ORDER,  //Graph
+    DFS, BFS, UNION_FIND, TOPOLOGICAL_ORDER, PRIM, KRUSKAL, //Graph
     GREEDY,
     DnC, BINARY_SEARCH, DP,     //Partitioning
     PERMUTATION, COMBINATION, BINARY_SELECTION, //Brute Force

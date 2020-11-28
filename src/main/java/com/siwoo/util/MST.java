@@ -1,6 +1,5 @@
 package com.siwoo.util;
 
-import javax.xml.ws.Holder;
 import java.util.*;
 
 /**
@@ -17,7 +16,7 @@ import java.util.*;
  *      
  *      MST v-w 가 최소 거리라는 것은 아니다.
  * 
- *  MST 을 찾는 알고리즘
+ *  그래스 G 의 MST 을 찾는 알고리즘
  *      1. Prim 프림
  *      2. Kruskal 크루스칼
  *      
@@ -39,6 +38,15 @@ import java.util.*;
  *              좀 더 생각한다면 S 집합의 원소-w 간선에 대해서 
  *              현재까지 알고 있는 최소 값만 유지하면 좀 더 많은 간선을 추려낼 수 있다.
  *      
+ *      Kruskal 알고리즘
+ *          정렬된 간선을 이용하여 순환이 생기지 않은 Union-Find 을 이용하여 MST 을 찾는 알고리즘.
+ *          (prim 과 비슷한 방식 = 작은 mst 을 트리를 키우는 방식, 하지만 kruskal 은 작은 mst 두 개를 merge)
+ *          
+ *          정렬된 간선 집합 E 의 E[i] 에 대해서
+ *              1. E[i].v 와 E[i].w 가 연결 컴포넌트라면 순환이 생기므로 무시.
+ *              2. 위의 경우가 아니라면 E[i] 은 두 컴포넌트을 잇는 최소 가중치 이므로 
+ *                  거리를 합산하고 E[i].v, E[i].w 을 union 연산  (두 개의 mst 을 merge)
+ *          
  */
 public class MST {
     
@@ -54,52 +62,63 @@ public class MST {
             this.w = w;
             this.weight = weight;
         }
-
-        @Override
-        public String toString() {
-            return "Edge{" +
-                    "v=" + v +
-                    ", w=" + w +
-                    ", weight=" + weight +
-                    '}';
-        }
+        
     }
     
-    public static void mst(WeightedGraph G) {   //buggy - edge 을 순회하는 방식으로 도전.
-        Map<Integer, Edge> edgeTo = new HashMap<>();    // MST 의 v-w
-        Map<Integer, Integer> distTo = new HashMap<>(); // 가중치의 최소값
+    public static int prim(WeightedGraph G) {   //buggy - edge 을 순회하는 방식으로 도전.
+//        Map<Integer, Edge> edgeTo = new HashMap<>();    // MST 의 v-w
+//        Map<Integer, Integer> distTo = new HashMap<>(); // 가중치의 최소값
+//        Set<Integer> visit = new HashSet<>();
+//        Queue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(distTo::get));
+//        Integer start = null;
+//        for (int v: G.G.keySet()) {
+//            if (start == null) start = v;
+//            distTo.put(v, Integer.MAX_VALUE);
+//        }
+//        distTo.put(start, 0);
+//        pq.add(start);
+//        edgeTo.put(start, null);
+//        while (!pq.isEmpty())
+//            visit(G, edgeTo, distTo, visit, pq);
+//        System.out.println(edgeTo);
+        int v = G.G.keySet().stream().findFirst().get();
         Set<Integer> visit = new HashSet<>();
-        Queue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(distTo::get));
-        Integer start = null;
-        for (int v: G.G.keySet()) {
-            if (start == null) start = v;
-            distTo.put(v, Integer.MAX_VALUE);
-        }
-        distTo.put(start, 0);
-        pq.add(start);
-        edgeTo.put(start, null);
-        while (!pq.isEmpty())
-            visit(G, edgeTo, distTo, visit, pq);
-        System.out.println(edgeTo);
-    }
-
-    private static void visit(WeightedGraph G, Map<Integer, Edge> edgeTo, Map<Integer, Integer> distTo, Set<Integer> visit, Queue<Integer> pq) {
-        int v = pq.poll();
         visit.add(v);
-        for (Edge e: G.G.get(v)) {
-            int w = e.w;
-            if (visit.contains(w)) continue;
-            if (e.weight < distTo.get(w)) {
-                edgeTo.put(w, e);
-                distTo.put(w, e.weight);
-                pq.add(w);
-            }
+        PriorityQueue<Edge> q = new PriorityQueue<>(Comparator.comparingInt(e -> e.weight));
+        q.addAll(G.G.get(v));
+        Map<Integer, Edge> edgeTo = new HashMap<>();
+        int dist = 0;
+        while (!q.isEmpty()) {
+            Edge e = q.poll();
+            if (visit.contains(e.w)) continue;
+            visit.add(e.w);
+            dist += e.weight;
+            edgeTo.put(e.w, e);
+            q.addAll(G.G.get(e.w));
         }
+        return dist;
     }
-
+    
+    public static int kruskal(WeightedGraph G) {
+        List<Edge> edges = new ArrayList<>();
+        for (int v: G.G.keySet())
+            edges.addAll(G.G.get(v));
+        edges.sort(Comparator.comparingInt(e -> e.weight));
+        UnionFind uf = new UnionFind(G.G.keySet().size()+1);
+        int dist = 0;
+        for (Edge edge: edges) {
+            int v = edge.v,
+                    w = edge.w;
+            if (uf.connected(v, w)) continue;   //cycle
+            dist += edge.weight;
+            uf.connect(v, w);
+        }
+        return dist;
+    }
+    
     public static void main(String[] args) {
         WeightedGraph G = new WeightedGraph();
-        try (Scanner scanner = new Scanner(ClassLoader.getSystemResourceAsStream("mst"))) {
+        try (Scanner scanner = new Scanner(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("mst")))) {
             while (true) {
                 if (!scanner.hasNext()) break;
                 int v = scanner.nextInt(),
@@ -112,6 +131,9 @@ public class MST {
             }
         }
         
-        mst(G);
+        int x = prim(G);
+        System.out.println(x);
+        x = kruskal(G);
+        System.out.println(x);
     }
 }

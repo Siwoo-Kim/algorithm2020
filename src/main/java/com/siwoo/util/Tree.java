@@ -97,7 +97,7 @@ public class Tree<E> {
 
     private int height(Node<E> root) {
         if (root == null) return 0;
-        return Math.max(height(root.left), height(root.right)) + (root == this.root? 0: 1);
+        return java.lang.Math.max(height(root.left), height(root.right)) + (root == this.root? 0: 1);
     }
 
     public E reduce(BiFunction<E, E, E> reducer) {
