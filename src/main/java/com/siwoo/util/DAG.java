@@ -16,6 +16,7 @@ import java.util.*;
  *      => 스택 자체가 w -> v 의 경로의 증거이고 현재 콜스택에 의해 v -> w 로 순환이 완선.
  *  
  *  위상정렬 (topological order)
+ *     
  *      dfs 을 이용한 위상 정렬
  *      
  *          그래프의 간선 v-w 에서 v 가 w 보다 선행한다는 순서를 찾는 알고리즘
@@ -36,6 +37,10 @@ import java.util.*;
  *          3. v 의 방문 정점 w 에 대하여 indegree 을 하나씩 지워준다.
  *          이때 w 의 indegree = 0 이라면 큐에 넣어준다.
  *          
+ *      BFS over DFS in topological order
+ *          => 작업관의 선행 관계 이상의 정렬, 
+ *          동시에 실행할 수 있는 선행 관계 스케쥴링의 최소 시간을 
+ *          구할땐, BFS 로 풀어야 한다.
  */
 public class DAG {
     
