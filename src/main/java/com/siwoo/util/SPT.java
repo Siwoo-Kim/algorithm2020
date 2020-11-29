@@ -24,9 +24,9 @@ import java.util.*;
  *      distTo[v] + edge.weight is less than distTo[w] ?
  *      
  *  weighted digraph 의 최단 경로 알고리즘.
- *      벨판-포드, 다익스트라.
+ *      벨만-포드 O(VE), 다익스트라 O(ElogE)
  *      
- *  벨만 포드 알고리즘. bellman ford
+ *  벨만 포드 알고리즘. bellman-ford
  *      V 개의 정점을 가진 가중 방향 그래프 G 에서, 
  *      원점 s 에서 "음의 순환이 없는 경우", 단일 원점 s 로부터의 최단 경로 문제를 해결한다.
  *      -> 벨만 포드의 시간 복잡도는 O(VE) 이다. 가중치가 음수인 그래프가 아니라면 다익스트라를 이용.
@@ -64,11 +64,21 @@ import java.util.*;
  *                 }
  *             }
  *         }
- *      개선된 큐-기반 벨만 포드 알고리즘.
+ *         
+ *      개선된 큐-기반 벨만 포드 알고리즘. (SPFA)
  *          간선의 최소 경로의 검사를 줄이기 위해 
  *          distTo[] 의 값이 바뀔 수 있는 것은 relax(v) 에서 distTo[] 값이 바뀐 정점 w 라는 점을 이용한다.
  *          이러한 점들을 큐을 이용해 추적한다.
  *          
+ *            while (!q.isEmpty())
+ *              int v = q.poll
+ *              relax(G, v);
+ *
+ *            //in relax
+ *             if (distTo[w] < distTo[v] + e.weight)
+ *                //update weight v-w
+ *                q.enqueue(w)  // 업데이트된 경로만 업데이트 해준다.
+ *                
  *  다익스트라 알고리즘. dijkstra           
  *      prim (최소 신장 트리을 찾는 알고리즘) 의 방식을 착용해 SPT (최단 경로 트리) 을 구하는 알고리즘.
  *      
@@ -121,6 +131,10 @@ import java.util.*;
  *              // v-k 로 가는 가중치 + k-w 로 가는 가중
  *          
  *          d[k][v][w] = Math.min(d[k-1][v][w], d[k-1][v][k] + d[k-1][k][w])
+ *
+ *  SPFA 알고리즘.
+ *      bellman-ford 알고리즘을 개선한 알고리즘.
+ *      개선된 큐-기반 벨만 포드 알고리즘을 참고.
  *      
  */
 public class SPT {
