@@ -98,8 +98,32 @@ import java.util.*;
  *          중복의 (v, v.weight) 가 큐에 있더라도 상관없다.
  *          SPT 에 포함된 집합은 한번만 수행될거며 (visit[v])
  *          중복 수행되더라도 간선 이완에 영향을 끼치지 않기 때문.
+ *          
+ *   플로이드 알고리즘 floyd-warshall algorithm
+ *      dynamic programming 과 간선 이완을 통해 모든 정점 v 의 spt 을 구하는 알고리즘.
+ *      
+ *      if (d[v][w] > d[v][k] + d[k][w])    //i-j 로 가는 경로보다 i-k-j 로 가는 경로가 빠르다면.
+ *          v-[?]-w
+ *          ? 에 들어갈 수 있는 정점은 V-2 개  
+ *         
+ *         간단한 코드를 위해 
+ *         d[k][v][w] 가 MAX 값이라면, k 을 통해 v-w 로 가는 경로가 없다고 가정한다.
+ *         
+ *      d[k][v][w] 을 v-w 로 가는 최단 경로이고, k 은 "방문할 수 있는 정점" 이라 가정한다면
+ *         
+ *      d[k][v][w] 은  (0<k<V)
+ *          1. k 가 경로에 없는 경우. (MAX 값이라면)
+ *              d[k-1][v][w]    
+ *              // k 는 경로에 없으니 이전의 값이 최단 경로이다.
+ *              
+ *         2. k 가 경로에 있는 경우.
+ *              d[k-1][v][k] + d[k-1][k][w]
+ *              // v-k 로 가는 가중치 + k-w 로 가는 가중
+ *          
+ *          d[k][v][w] = Math.min(d[k-1][v][w], d[k-1][v][k] + d[k-1][k][w])
+ *      
  */
-public class ShortestPath {
+public class SPT {
     
     private Map<Integer, List<Edge>> G = new HashMap<>();
     
@@ -255,8 +279,30 @@ public class ShortestPath {
         }
     }
 
+    private static class FloydWarshall {
+        private Map<Integer, List<Edge>> G;
+        private double[][] dist;
+
+        public FloydWarshall(Map<Integer, List<Edge>> G) {
+            this.G = G;
+            dist = new double[G.size()][G.size()];
+            Arrays.stream(dist).forEach(d -> Arrays.fill(d, Integer.MAX_VALUE));
+            for (int v: G.keySet()) {
+                dist[v][v] = 0;
+                for (Edge e : G.get(v))
+                    dist[v][e.to] = e.weight;
+            }
+            for (int k=0; k<G.size(); k++)
+                for (int v=0; v<G.size(); v++)
+                    for (int w=0; w<G.size(); w++) {
+                        if (dist[v][w] > dist[v][k] + dist[k][w])
+                            dist[v][w] = dist[v][k] + dist[k][w];
+                    }
+        }
+    }
+    
     public static void main(String[] args) {
-        ShortestPath sp = new ShortestPath();
+        SPT sp = new SPT();
         try (Scanner scanner = new Scanner(Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("tinyEWDn.txt")))) {
             int V = scanner.nextInt();
             int E = scanner.nextInt();
@@ -270,14 +316,18 @@ public class ShortestPath {
             }
         }
         BellmanFordSP bellmanFordSP = new BellmanFordSP(sp.G, 0);
-        for (int k: sp.G.keySet())
-            System.out.printf("%d: %.02f%n", k, bellmanFordSP.distTo[k]);
+        for (int w: sp.G.keySet())
+            System.out.printf("%d: %.02f%n", w, bellmanFordSP.distTo[w]);
         System.out.println("==========================");
         Dijkstra dijkstra = new Dijkstra(sp.G, 0);
-        for (int k: sp.G.keySet())
-            System.out.printf("%d: %.02f%n", k, dijkstra.distTo[k]);
+        for (int w: sp.G.keySet())
+            System.out.printf("%d: %.02f%n", w, dijkstra.distTo[w]);
+        System.out.println("==========================");
+        FloydWarshall floydWarshall = new FloydWarshall(sp.G);
+        for (int w=0; w<sp.G.size(); w++) {
+            System.out.printf("%d: %.02f%n", w, floydWarshall.dist[0][w]);
+        }
     }
-    
 }
 
 

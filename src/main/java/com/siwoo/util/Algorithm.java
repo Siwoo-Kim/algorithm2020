@@ -5,7 +5,7 @@ public enum Algorithm {
     DFS, BFS, UNION_FIND,               // graph (reachable)
     TOPOLOGICAL_ORDER, // scheduling
     PRIM, KRUSKAL, // graph-mst
-    BELLMAN_FORD, DIJKSTRA, // graph-spt
+    BELLMAN_FORD, DIJKSTRA, FLOYD_MARSHALL, // graph-spt
     GREEDY,
     DnC, BINARY_SEARCH, DP,     //basic
     PERMUTATION, COMBINATION, BINARY_SELECTION, //  brute force 
