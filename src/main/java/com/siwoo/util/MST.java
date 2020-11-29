@@ -69,6 +69,7 @@ public class MST {
 //        Map<Integer, Edge> edgeTo = new HashMap<>();    // MST 의 v-w
 //        Map<Integer, Integer> distTo = new HashMap<>(); // 가중치의 최소값
 //        Set<Integer> visit = new HashSet<>();
+          //Don't do this!
 //        Queue<Integer> pq = new PriorityQueue<>(Comparator.comparingDouble(distTo::get));
 //        Integer start = null;
 //        for (int v: G.G.keySet()) {
@@ -130,7 +131,6 @@ public class MST {
                 G.G.get(w).add(new Edge(w, v, weight));
             }
         }
-        
         int x = prim(G);
         System.out.println(x);
         x = kruskal(G);

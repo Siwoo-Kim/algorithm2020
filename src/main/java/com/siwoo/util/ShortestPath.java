@@ -34,7 +34,6 @@ import java.util.*;
  *      가중치 음수가 있는 경우 음의 순환을 탐지하는 알고리즘을 이용하면 가중치가 음수인 그래프에서도
  *      최단 경로를 구할 수 있다.
  *
- *      
  *      s-w 의 최단 경로에서 방문하는 정점은 V-1 을 클 수 없단 점을 이용한다.
  *          => V-1 보다 크다면 분명 정점을 중복 방문한다.
  *          어떤 정점 w 을 중복 방문했다고 가정하자.
@@ -49,7 +48,7 @@ import java.util.*;
  *              for (Edge e: G.adj(v))
  *                  relax(e)
  *
- *      음의 순환의 탐지법.
+ *      음의 순환 탐지법.
  *          벨만 포드의 증명으로 간선 이완을 V 번하면 최단 경로를 구할 수 있다.
  *          음수 순환의 탐지는 이 특징을 이용한다.
  *          만약 V+1 에도 특정 정점의 최단 경로가 변경된다면 이는 음의 순환이 반드시 존재한다는 것.
@@ -93,6 +92,12 @@ import java.util.*;
  *          => 우선순위 큐에 가장 top 의 정점 w 의 s-w 거리는
  *          이미 이완된 정점들 v 의 보단 s-v 보단 크고
  *          아직 이완되지 않은 어떤 정점 k 보단 작다.
+ *          
+ *          큐의 불변을 지키기 위해 
+ *          (v, v.weight) 을 함께 넣어줘야 한다.
+ *          중복의 (v, v.weight) 가 큐에 있더라도 상관없다.
+ *          SPT 에 포함된 집합은 한번만 수행될거며 (visit[v])
+ *          중복 수행되더라도 간선 이완에 영향을 끼치지 않기 때문.
  */
 public class ShortestPath {
     
@@ -129,6 +134,7 @@ public class ShortestPath {
             distTo = new double[G.size()];
             boolean[] onQ = new boolean[G.size()];
             this.s = s;
+            //don't do this!
             pq = new PriorityQueue<>(Comparator.comparingDouble(v -> distTo[v]));
             for (int v: G.keySet())
                 distTo[v] = Double.POSITIVE_INFINITY;
