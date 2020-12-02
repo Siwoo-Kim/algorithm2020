@@ -60,6 +60,11 @@ import java.util.function.Function;
  *  1. 정점 v 에서 거리가 가진 먼 정점 u 을 구한다. u = farthest(v)
  *  2. 정점 u 에서 모든 정점까지의 거리를 구한 후 최대값을 취한다. diameter = maxDistance(u)
  *
+ *  LCA (Lowest Common Ancestor)
+ *      두 정점 중 가장 가까운 공통 조상.
+ *      이진 트리라면 lca 의 위치는 left<lca<right
+ *      
+ *      
  */
 public class Tree<E> {
 
@@ -121,7 +126,7 @@ public class Tree<E> {
         leaves(root.right, result);
         return result;
     }
-
+    
     private int diameter() {
         Graph<Node<E>> G = new Graph<>();
         createGraph(root, G);
