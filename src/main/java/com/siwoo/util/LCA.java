@@ -19,7 +19,7 @@ import java.util.*;
  *      root, v, w, lca 가 있고, distTo[] 에 루트와의 거리라 가정한다면
  *          dist[v] + dist[w] - (dist[lca] * 2) (겹치는 간선)
  *  
- *  LCA 개선하기 O(logN)기
+ *  LCA 개선하기 O(logN)
  *      1. 조상 이어주기
  *          p[i][j] 을 노드 i 의 2^j 번째 조상이라 가정한다면,
  *      
@@ -35,53 +35,102 @@ import java.util.*;
  *          depth[v] != depth[w] 이라면 레벨이 큰 것을 2^k 칸씩 올린다. (k 은 1씩 감소)
  *              v = parent[v][k--]
  *          depth[v] == depth[w] 이고 v != w (같은 노드가 되지 않을 때까지) 2^k 칸씩 위로 올린다. (k 은 1씩 감소)
- *              
+ *              => v != w 은 가장 낮은 공통 조상을 구하기 위한 조건. 
  *          마지막으로 1 칸 올린다.
+ *  
+ *  LCA 개선하기 - DFS O(logN)
+ *      dfs 로 노드를 방문할 때, 
+ *          in[v] 에 i 을 방문할 때, 몇번째인지
+ *          out[v] 에 i 을 빠져나갈 때, 몇번째인지를 기록.
+ *          마찬가지로 dept
+ *      upper 함수.
+ *          upper(v, w) = in[v] <= in[w] 이고 out[w] <= out[v] 이라면
+ *              v 은 w 의 조상이다.
  */
 public class LCA {
     
     private static class Tree<E extends Comparable<E>> {
         private Node root;
         private int size;
-
-        @SuppressWarnings("unchecked")
+        private Map<Node, Integer> in, out;
+        private Map<Node, Node[]> p;
+        private int k, l;
+        
         public E lca(E v, E w) {
-            Graph G = graph(root);
-            Map<Node, Node[]> lcas = new HashMap<>();
-            for (Node node: G.parent.keySet()) {
-                lcas.put(node, (Node[]) Array.newInstance(Node.class, size(root)));
-                lcas.get(node)[0] = G.parent.get(node);
-            }
-            for (int i=1; (1<<i) < size; i++) {
-                for (Node node: lcas.keySet()) {
-                    if (lcas.get(node)[i-1] != null)    // 부모 이어주
-                        lcas.get(node)[i] = lcas.get(lcas.get(node)[i-1])[i-1];
-                }
+            for (l=1; (1<<l)<=size(root); l++) ;
+            l--;
+            if (p == null) {
+                p = new HashMap<>();
+                in = new HashMap<>();
+                out = new HashMap<>();
+                dfs(root, root);
             }
             Node vn = get(v),
-                    vw = get(w);
-            // 부모 구하기.
-            if (G.depth.get(vn) < G.depth.get(vw)) {
-                Node t = vn;
-                vn = vw;
-                vw = t;
+                    wn = get(w);
+            if (isAncestor(vn, wn)) return vn.data;
+            if (isAncestor(wn, vn)) return wn.data;
+            for (int i=l; i>=0; i--) {
+                if (!isAncestor(p.get(vn)[i], wn))
+                    vn = p.get(vn)[i];
             }
-            int log = 1;
-            for (log=1; (1<<log) <= G.depth.get(vn); log++);
-            log -= 1;
-            for (int k=log; k>=0; k--) {
-                if (G.depth.get(vn) - (1<<k) >= G.depth.get(vw))
-                    vn = lcas.get(vn)[k];
-            }
-            if (vn == vw) return vn.data;
-            for (int i=log; i>=0; i--) {
-                if (lcas.get(vn)[i] != null && lcas.get(vn)[i] != lcas.get(vw)[i]) {
-                    vn = lcas.get(vn)[i];
-                    vw = lcas.get(vw)[i];
-                }
-            }
-            return lcas.get(vn)[0].data;
+            return p.get(vn)[0].data;
         }
+
+        public boolean isAncestor(Node v, Node w) {
+            return in.get(v) <= out.get(w) && out.get(v) >= out.get(w);
+        }
+        
+        private void dfs(Node node, Node parent) { 
+            in.put(node, ++k);
+            p.put(node, (Node[]) Array.newInstance(Node.class, size(this.root)));
+            p.get(node)[0] = parent;
+            for (int k=1; k<=l; k++)
+                p.get(node)[k] = p.get(p.get(node)[k-1])[k-1];
+            for (Node child: Arrays.asList(node.left, node.right)) {
+                if (child != null)
+                    dfs(child, node);
+            }
+            out.put(node, ++k);
+        }
+
+//        @SuppressWarnings("unchecked")
+//        public E lca(E v, E w) {
+//            Graph G = graph(root);
+//            Map<Node, Node[]> lcas = new HashMap<>();
+//            for (Node node: G.parent.keySet()) {
+//                lcas.put(node, (Node[]) Array.newInstance(Node.class, size(root)));
+//                lcas.get(node)[0] = G.parent.get(node);
+//            }
+//            for (int i=1; (1<<i) < size; i++) {
+//                for (Node node: lcas.keySet()) {
+//                    if (lcas.get(node)[i-1] != null)    // 부모 이어주
+//                        lcas.get(node)[i] = lcas.get(lcas.get(node)[i-1])[i-1];
+//                }
+//            }
+//            Node vn = get(v),
+//                    vw = get(w);
+//            // 부모 구하기.
+//            if (G.depth.get(vn) < G.depth.get(vw)) {
+//                Node t = vn;
+//                vn = vw;
+//                vw = t;
+//            }
+//            int log = 1;
+//            for (log=1; (1<<log) <= G.depth.get(vn); log++);
+//            log -= 1;
+//            for (int k=log; k>=0; k--) {
+//                if (G.depth.get(vn) - (1<<k) >= G.depth.get(vw))
+//                    vn = lcas.get(vn)[k];
+//            }
+//            if (vn == vw) return vn.data;
+//            for (int i=log; i>=0; i--) {
+//                if (lcas.get(vn)[i] != null && lcas.get(vn)[i] != lcas.get(vw)[i]) {
+//                    vn = lcas.get(vn)[i];
+//                    vw = lcas.get(vw)[i];
+//                }
+//            }
+//            return lcas.get(vn)[0].data;
+//        }
 
         private class Node {
             Node left, right;
