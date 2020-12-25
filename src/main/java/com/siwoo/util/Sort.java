@@ -36,7 +36,7 @@ public class Sort {
 
     private static void shuffle(int[] A) {  //fisher-yates shuffle
         Random random = new Random();
-        for (int i=A.length-1; i>0; i++) {
+        for (int i=A.length-1; i>0; i--) {
             int x = random.nextInt(i+1);    //i+1 exclusive
             swap(i, x, A);
         }
